@@ -58,6 +58,12 @@ const (
 	ErrRecordNotFound
 	UserLogOut
 	UserAlreadyLogin
+
+	ServiceConsultNotExist    // 咨询记录不存在
+	ServiceFeedbackNotExist   // 反馈记录不存在
+	ServiceUserCreationFailed // 用户创建失败
+	ServiceUserDeletionFailed // 用户删除失败
+
 )
 
 // User Specific Errors (1100-1199)

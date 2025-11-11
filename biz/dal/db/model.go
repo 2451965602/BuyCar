@@ -2,6 +2,7 @@ package db
 
 import (
 	"buycar/biz/model/module"
+	"fmt"
 	"time"
 )
 
@@ -44,6 +45,47 @@ func (f Feedback) ToModuleStruct() *module.Feedback {
 	}
 }
 
+type Consult struct {
+	ConsultId       int64
+	UserId          *int64
+	Title           *string
+	BudgetRange     *string
+	PreferredType   *string
+	UseCase         *string
+	FuelType        *string
+	BrandPreference *string
+	LlmModel        *string
+	LlmPrompt       *string
+	LlmResponse     *string
+	Recommendations *string
+	Status          string
+	CreatedAt       time.Time
+	UpdatedAt       time.Time
+}
+
+func (c Consult) ToModuleStruct() *module.Consult {
+	var userID *string
+	if c.UserId != nil {
+		uidStr := fmt.Sprintf("%d", *c.UserId)
+		userID = &uidStr
+	}
+
+	return &module.Consult{
+		ConsultID:       fmt.Sprintf("%d", c.ConsultId),
+		UserID:          userID,
+		BudgetRange:     c.BudgetRange,
+		PreferredType:   c.PreferredType,
+		UseCase:         c.UseCase,
+		FuelType:        c.FuelType,
+		BrandPreference: c.BrandPreference,
+		LlmModel:        c.LlmModel,
+		LlmPrompt:       c.LlmPrompt,
+		LlmResponse:     c.LlmResponse,
+		Recommendations: c.Recommendations,
+		CreatedAt:       c.CreatedAt.Unix(),
+		UpdatedAt:       c.UpdatedAt.Unix(),
+	}
+}
 type ScoreTransaction struct {
 	Id           int64
 	UserId       int64
