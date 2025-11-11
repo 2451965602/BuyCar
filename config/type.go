@@ -14,12 +14,13 @@ type server struct {
 }
 
 type aiEndpoint struct {
-	Url    string
-	ApiKey string
+    Url    string
+    ApiKey string
+    Model  string
 }
 
 type config struct {
-	MySQL      mySQL
-	Server     server
-	AiEndpoint aiEndpoint
+    MySQL      mySQL
+    Server     server
+    AiEndpoint aiEndpoint
 }

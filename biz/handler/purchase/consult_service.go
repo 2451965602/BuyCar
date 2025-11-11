@@ -3,41 +3,59 @@
 package purchase
 
 import (
-	"context"
+    "buycar/biz/pack"
+    "buycar/biz/service"
+    "buycar/pkg/errno"
+    "context"
 
-	purchase "buycar/biz/model/purchase"
-	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/protocol/consts"
+    purchase "buycar/biz/model/purchase"
+    "github.com/cloudwego/hertz/pkg/app"
 )
 
 // PurchaseConsult .
 // @router /api/consult/purchase [GET]
 func PurchaseConsult(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req purchase.PurchaseConsultReq
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
-		return
-	}
+    var err error
+    var req purchase.PurchaseConsultReq
+    err = c.BindAndValidate(&req)
+    if err != nil {
+        pack.BuildFailResponse(c, err)
+        return
+    }
 
-	resp := new(purchase.PurchaseConsultResp)
+    resp := new(purchase.PurchaseConsultResp)
+    data, err := service.NewConsultService(ctx, c).PurchaseConsult(&req)
+    if err != nil {
+        pack.BuildFailResponse(c, err)
+        return
+    }
 
-	c.JSON(consts.StatusOK, resp)
+    resp.BaseResponse = pack.BuildBaseResp(errno.Success)
+    resp.Consult = data
+
+    pack.SendResponse(c, resp)
 }
 
 // QueryConsult .
 // @router /api/consult/query [GET]
 func QueryConsult(ctx context.Context, c *app.RequestContext) {
-	var err error
-	var req purchase.QueryConsultReq
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
-		return
-	}
+    var err error
+    var req purchase.QueryConsultReq
+    err = c.BindAndValidate(&req)
+    if err != nil {
+        pack.BuildFailResponse(c, err)
+        return
+    }
 
-	resp := new(purchase.QueryConsultResp)
+    resp := new(purchase.QueryConsultResp)
+    data, err := service.NewConsultService(ctx, c).QueryConsult(&req)
+    if err != nil {
+        pack.BuildFailResponse(c, err)
+        return
+    }
 
-	c.JSON(consts.StatusOK, resp)
+    resp.BaseResponse = pack.BuildBaseResp(errno.Success)
+    resp.Consult = data
+
+    pack.SendResponse(c, resp)
 }

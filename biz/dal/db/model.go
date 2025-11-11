@@ -36,13 +36,13 @@ type Feedback struct {
 }
 
 func (f Feedback) ToModuleStruct() *module.Feedback {
-	return &module.Feedback{
-		ID:        f.Id,
-		UserID:    f.UserId,
-		ConsultID: f.ConsultId,
-		Content:   f.Content,
-		CreatedAt: f.CreatedAt.String(),
-	}
+    return &module.Feedback{
+        ID:        f.Id,
+        UserID:    f.UserId,
+        ConsultID: f.ConsultId,
+        Content:   f.Content,
+        CreatedAt: f.CreatedAt.String(),
+    }
 }
 
 type Consult struct {

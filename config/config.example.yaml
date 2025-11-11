@@ -8,3 +8,9 @@ mysql:
 server:
   addr: "0.0.0.0"
   port: 8888
+
+# OpenAI 兼容端点示例（将 url 替换为你的兼容 API 地址）
+aiendpoint:
+  url: "https://api.openai.com/v1/chat/completions"
+  apiKey: "YOUR_API_KEY"
+  model: "gpt-4o-mini"
