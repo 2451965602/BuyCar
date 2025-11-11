@@ -40,7 +40,8 @@ type tongyi struct {
 }
 
 type config struct {
-	MySQL      mySQL
-	Server     server
-	AiEndpoint aiEndpoint
+    MySQL      mySQL
+    Server     server
+    AiEndpoint aiEndpoint
+    LLM        llm       `mapstructure:"llm"`
 }

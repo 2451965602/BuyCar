@@ -7,10 +7,11 @@ import (
 )
 
 var (
-	Mysql        *mySQL
-	Server       *server
-	AiEndpoint   *aiEndpoint
-	runtimeViper = viper.New()
+    Mysql        *mySQL
+    Server       *server
+    AiEndpoint   *aiEndpoint
+    LLM          *llm
+    runtimeViper = viper.New()
 )
 
 // Init 目的是初始化并读入配置
@@ -42,8 +43,9 @@ func configMapping() {
 		// 由于这个函数会在配置重载时被再次触发，所以需要判断日志记录方式
 		logger.Fatalf("config.configMapping: 配置反序列化失败: %v", err)
 	}
-	Mysql = &c.MySQL
-	Server = &c.Server
-	AiEndpoint = &c.AiEndpoint
+    Mysql = &c.MySQL
+    Server = &c.Server
+    AiEndpoint = &c.AiEndpoint
+    LLM = &c.LLM
 
 }

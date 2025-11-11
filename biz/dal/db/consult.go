@@ -22,7 +22,7 @@ func GetConsultByID(ctx context.Context, id int64) (*Consult, error) {
     err := DB.WithContext(ctx).Where("consult_id = ?", id).First(&consult).Error
     if err != nil {
         if errors.Is(err, gorm.ErrRecordNotFound) {
-            return nil, errno.ResourceNotFoundError
+            return nil, errno.NewErrNo(errno.ServiceConsultNotExist, "咨询记录不存在")
         }
         return nil, errno.NewErrNo(errno.InternalDatabaseErrorCode, "查询咨询失败: "+err.Error())
     }
