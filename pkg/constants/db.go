@@ -11,4 +11,6 @@ const (
 
 const (
 	UserTableName = "users"
+	ScoreTable    = "score_transactions"
+	GiftTable     = "gifts"
 )

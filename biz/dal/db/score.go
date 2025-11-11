@@ -1,6 +1,7 @@
 package db
 
 import (
+	"buycar/pkg/constants"
 	"buycar/pkg/errno"
 	"context"
 	"strconv"
@@ -9,13 +10,13 @@ import (
 func PurchaseGift(ctx context.Context, userID int64, giftID int64) error {
 
 	var gift Gift
-	err := DB.WithContext(ctx).Where("gift_id = ?", giftID).First(&gift).Error
+	err := DB.WithContext(ctx).Table(constants.GiftTable).Where("gift_id = ?", giftID).First(&gift).Error
 	if err != nil {
 		return errno.NewErrNo(errno.GiftNotFound, "未知的礼物ID")
 	}
 
 	var user User
-	err = DB.Where("user_id = ?", userID).First(&user).Error
+	err = DB.WithContext(ctx).Table(constants.UserTableName).Where("user_id = ?", userID).First(&user).Error
 	if err != nil {
 		return errno.InternalServiceError
 	}
@@ -25,7 +26,7 @@ func PurchaseGift(ctx context.Context, userID int64, giftID int64) error {
 	}
 
 	user.Score -= gift.ScoreCost
-	err = DB.Save(&user).Error
+	err = DB.WithContext(ctx).Table(constants.UserTableName).Save(&user).Error
 	if err != nil {
 		return err
 	}
@@ -37,7 +38,7 @@ func PurchaseGift(ctx context.Context, userID int64, giftID int64) error {
 		RefId:        giftID,
 		Description:  "Purchased gift with ID " + strconv.FormatInt(giftID, 10),
 	}
-	err = DB.Create(&scoreTransaction).Error
+	err = DB.WithContext(ctx).Table(constants.ScoreTable).Create(&scoreTransaction).Error
 	if err != nil {
 		return errno.NewErrNo(errno.InternalServiceErrorCode, "记录积分变更失败")
 	}
@@ -48,7 +49,7 @@ func PurchaseGift(ctx context.Context, userID int64, giftID int64) error {
 
 func GetAllGifts(ctx context.Context) ([]Gift, error) {
 	var gifts []Gift
-	err := DB.WithContext(ctx).Find(&gifts).Error
+	err := DB.WithContext(ctx).Table(constants.GiftTable).Find(&gifts).Error
 	if err != nil {
 		return nil, errno.InternalServiceError
 	}

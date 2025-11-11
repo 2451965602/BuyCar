@@ -1,6 +1,7 @@
 package db
 
 import (
+	"buycar/pkg/constants"
 	"buycar/pkg/errno"
 	"context"
 	"errors"
@@ -14,7 +15,7 @@ func CreateUser(ctx context.Context, username, password string) error {
 		PasswordHash: password,
 	}
 
-	err := DB.WithContext(ctx).Create(user).Error
+	err := DB.WithContext(ctx).Table(constants.UserTableName).Create(user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return errno.NewErrNo(errno.ServiceUserExist, " 用户已存在")
@@ -27,7 +28,7 @@ func CreateUser(ctx context.Context, username, password string) error {
 
 func GetUserByUserName(ctx context.Context, username string) (*User, error) {
 	var user User
-	err := DB.WithContext(ctx).Where("username = ?", username).First(&user).Error
+	err := DB.WithContext(ctx).Table(constants.UserTableName).Where("username = ?", username).First(&user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errno.NewErrNo(errno.ServiceUserNotExist, "用户不存在")
@@ -44,7 +45,7 @@ func CreateFeedback(ctx context.Context, userId, ConsultId int64, content string
 		Content:   content,
 	}
 
-	err := DB.WithContext(ctx).Create(feedback).Error
+	err := DB.WithContext(ctx).Table(constants.UserTableName).Create(feedback).Error
 	if err != nil {
 		return errno.NewErrNo(errno.InternalDatabaseErrorCode, "创建反馈失败: "+err.Error())
 	}
