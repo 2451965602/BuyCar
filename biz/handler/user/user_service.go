@@ -25,6 +25,14 @@ func Login(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(user.LoginResp)
+	date, err := service.NewUserService(ctx, c).LoginIn(&req)
+	if err != nil {
+		pack.BuildFailResponse(c, err)
+		return
+	}
+
+	resp.BaseResponse = pack.BuildBaseResp(errno.Success)
+	resp.User = date
 
 	pack.SendResponse(c, resp)
 }
@@ -64,6 +72,13 @@ func Feedback(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(user.FeedbackResp)
+	err = service.NewUserService(ctx, c).CreateFeedback(&req)
+	if err != nil {
+		pack.BuildFailResponse(c, err)
+		return
+	}
+
+	resp.BaseResponse = pack.BuildBaseResp(errno.Success)
 
 	pack.SendResponse(c, resp)
 }

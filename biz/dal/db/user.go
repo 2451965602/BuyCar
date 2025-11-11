@@ -24,3 +24,29 @@ func CreateUser(ctx context.Context, username, password string) error {
 	return nil
 
 }
+
+func GetUserByUserName(ctx context.Context, username string) (*User, error) {
+	var user User
+	err := DB.WithContext(ctx).Where("username = ?", username).First(&user).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errno.ServiceUserNotExist
+		}
+		return nil, errno.NewErrNo(errno.InternalDatabaseErrorCode, "查询用户失败: "+err.Error())
+	}
+	return &user, nil
+}
+
+func CreateFeedback(ctx context.Context, userId, ConsultId int64, content string) error {
+	feedback := &Feedback{
+		UserId:    userId,
+		ConsultId: ConsultId,
+		Content:   content,
+	}
+
+	err := DB.WithContext(ctx).Create(feedback).Error
+	if err != nil {
+		return errno.NewErrNo(errno.InternalDatabaseErrorCode, "创建反馈失败: "+err.Error())
+	}
+	return nil
+}

@@ -2,7 +2,9 @@ package service
 
 import (
 	"buycar/biz/dal/db"
+	"buycar/biz/model/module"
 	"buycar/biz/model/user"
+	"buycar/pkg/utils"
 	"context"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -18,7 +20,40 @@ func NewUserService(ctx context.Context, c *app.RequestContext) *UserService {
 }
 
 func (s *UserService) Register(req *user.RegisterReq) error {
-	err := db.CreateUser(s.ctx, req.UserName, req.Password)
+
+	passwordHash, err := utils.EncryptPassword(req.Password)
+	if err != nil {
+		return err
+	}
+
+	req.Password = passwordHash
+
+	err = db.CreateUser(s.ctx, req.UserName, req.Password)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *UserService) LoginIn(req *user.LoginReq) (*module.User, error) {
+	userInfo, err := db.GetUserByUserName(s.ctx, req.UserName)
+	if err != nil {
+		return nil, err
+	}
+
+	err = utils.ComparePassword(userInfo.Password, req.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	userInfo.Password = ""
+
+	return userInfo.ToModuleStruct(), nil
+}
+
+func (s *UserService) CreateFeedback(req *user.FeedbackReq) error {
+	userID := GetUidFormContext(s.c)
+	err := db.CreateFeedback(s.ctx, userID, req.ConsultID, req.Content)
 	if err != nil {
 		return err
 	}

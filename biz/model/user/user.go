@@ -777,8 +777,8 @@ func (p *RegisterResp) String() string {
 
 // 提交反馈
 type FeedbackReq struct {
-	ConsultID *string `thrift:"consult_id,1,optional" form:"consult_id" json:"consult_id,omitempty" query:"consult_id"`
-	Content   string  `thrift:"content,2,required" form:"content,required" json:"content,required" query:"content,required"`
+	ConsultID int64  `thrift:"consult_id,1,required" form:"consult_id,required" json:"consult_id,required" query:"consult_id,required"`
+	Content   string `thrift:"content,2,required" form:"content,required" json:"content,required" query:"content,required"`
 }
 
 func NewFeedbackReq() *FeedbackReq {
@@ -788,13 +788,8 @@ func NewFeedbackReq() *FeedbackReq {
 func (p *FeedbackReq) InitDefault() {
 }
 
-var FeedbackReq_ConsultID_DEFAULT string
-
-func (p *FeedbackReq) GetConsultID() (v string) {
-	if !p.IsSetConsultID() {
-		return FeedbackReq_ConsultID_DEFAULT
-	}
-	return *p.ConsultID
+func (p *FeedbackReq) GetConsultID() (v int64) {
+	return p.ConsultID
 }
 
 func (p *FeedbackReq) GetContent() (v string) {
@@ -806,14 +801,11 @@ var fieldIDToName_FeedbackReq = map[int16]string{
 	2: "content",
 }
 
-func (p *FeedbackReq) IsSetConsultID() bool {
-	return p.ConsultID != nil
-}
-
 func (p *FeedbackReq) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
+	var issetConsultID bool = false
 	var issetContent bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
@@ -831,10 +823,11 @@ func (p *FeedbackReq) Read(iprot thrift.TProtocol) (err error) {
 
 		switch fieldId {
 		case 1:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField1(iprot); err != nil {
 					goto ReadFieldError
 				}
+				issetConsultID = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -858,6 +851,11 @@ func (p *FeedbackReq) Read(iprot thrift.TProtocol) (err error) {
 	}
 	if err = iprot.ReadStructEnd(); err != nil {
 		goto ReadStructEndError
+	}
+
+	if !issetConsultID {
+		fieldId = 1
+		goto RequiredFieldNotSetError
 	}
 
 	if !issetContent {
@@ -884,11 +882,11 @@ RequiredFieldNotSetError:
 
 func (p *FeedbackReq) ReadField1(iprot thrift.TProtocol) error {
 
-	var _field *string
-	if v, err := iprot.ReadString(); err != nil {
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
-		_field = &v
+		_field = v
 	}
 	p.ConsultID = _field
 	return nil
@@ -938,16 +936,14 @@ WriteStructEndError:
 }
 
 func (p *FeedbackReq) writeField1(oprot thrift.TProtocol) (err error) {
-	if p.IsSetConsultID() {
-		if err = oprot.WriteFieldBegin("consult_id", thrift.STRING, 1); err != nil {
-			goto WriteFieldBeginError
-		}
-		if err := oprot.WriteString(*p.ConsultID); err != nil {
-			return err
-		}
-		if err = oprot.WriteFieldEnd(); err != nil {
-			goto WriteFieldEndError
-		}
+	if err = oprot.WriteFieldBegin("consult_id", thrift.I64, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.ConsultID); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
 	}
 	return nil
 WriteFieldBeginError:

@@ -25,7 +25,7 @@ struct RegisterResp {
 
 // 提交反馈
 struct FeedbackReq {
-  optional string consult_id;
+  required i64 consult_id;
   required string content;
 }
 

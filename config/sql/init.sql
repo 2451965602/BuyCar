@@ -12,8 +12,8 @@ CREATE TABLE IF NOT EXISTS users (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE IF NOT EXISTS consults (
-                                        consult_id CHAR(36) PRIMARY KEY,
-                                        user_id VARCHAR(32) NULL,
+                                        consult_id BIGINT PRIMARY KEY,
+                                        user_id BIGINT NULL,
                                         title VARCHAR(128),
                                         budget_range VARCHAR(255),
                                         preferred_type VARCHAR(100),
@@ -34,10 +34,9 @@ CREATE TABLE IF NOT EXISTS consults (
 
 CREATE TABLE IF NOT EXISTS feedbacks (
                                          id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                                         user_id VARCHAR(32) NOT NULL,
-                                         consult_id CHAR(36) NULL,
+                                         user_id BIGINT NOT NULL,
+                                         consult_id BIGINT NOT NULL,
                                          content TEXT NOT NULL,
-                                         rating TINYINT NULL,
                                          created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                          INDEX idx_feedback_user_id (user_id),
                                          INDEX idx_feedback_consult_id (consult_id),

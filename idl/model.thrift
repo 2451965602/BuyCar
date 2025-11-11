@@ -6,12 +6,13 @@ struct BaseResp {
 }
 
 struct User {
-    required string user_id,
+    required i64 user_id,
+    required string username,
     optional string password_hash,
     required bool is_admin,
-    required string status,
-    required i64 created_at,
-    required i64 updated_at,
+    required i64 score,
+    required string created_at,
+    required string updated_at,
 }
 
 struct Consult {
@@ -32,11 +33,10 @@ struct Consult {
 
 struct Feedback {
     required i64 id,
-    required string user_id,
-    optional string consult_id,
+    required i64 user_id,
+    required i64 consult_id,
     required string content,
-    optional i8 rating,
-    required i64 created_at,
+    required string created_at,
 }
 
 struct Gift {

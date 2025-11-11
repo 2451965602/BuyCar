@@ -75,9 +75,9 @@ func AccessTokenJwt() {
 			if err != nil {
 				return nil, err
 			}
-			c.Set(constants.ContextUid, users.UserId)
+			c.Set(constants.ContextUid, users.UserID)
 			claims := &JwtCustomClaims{
-				UserId: users.UserId,
+				UserId: users.UserID,
 				UUID:   uuid.NewV1().String(),
 			}
 			return claims, nil

@@ -3,6 +3,7 @@
 package module
 
 import (
+	module "buycar/biz/handler/module"
 	"github.com/cloudwego/hertz/pkg/app/server"
 )
 
