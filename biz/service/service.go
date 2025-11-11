@@ -35,3 +35,15 @@ func convertToInt64(value interface{}) (int64, error) {
 		return 0, errno.NewErrNo(errno.InternalServiceErrorCode, "无法转换为int64类型")
 	}
 }
+
+func IsAdmin(c *app.RequestContext) bool {
+	isAdminVal, ok := c.Get(constants.Permission)
+	if !ok || isAdminVal == nil {
+		return false
+	}
+	isAdmin, ok := isAdminVal.(bool)
+	if !ok {
+		return false
+	}
+	return isAdmin
+}

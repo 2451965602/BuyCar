@@ -21,7 +21,8 @@ var (
 )
 
 type JwtCustomClaims struct {
-	UserId int64 `json:"userid"`
+	UserId  int64 `json:"userid"`
+	IsAdmin bool  `json:"is_admin"`
 }
 
 func AccessTokenJwt() {
@@ -40,6 +41,7 @@ func AccessTokenJwt() {
 				return jwt.MapClaims{
 					AccessTokenJwtMiddleware.IdentityKey: v.UserId,
 					constants.TokenType:                  "access",
+					constants.Permission:                 v.IsAdmin,
 				}
 			}
 			return jwt.MapClaims{}
@@ -97,6 +99,7 @@ func RefreshTokenJwt() {
 				return jwt.MapClaims{
 					AccessTokenJwtMiddleware.IdentityKey: v.UserId,
 					constants.TokenType:                  "refresh",
+					constants.Permission:                 v.IsAdmin,
 				}
 			}
 			return jwt.MapClaims{}
@@ -122,7 +125,8 @@ func RefreshTokenJwt() {
 			userId := service.GetUidFormContext(c)
 
 			claims := &JwtCustomClaims{
-				UserId: userId,
+				UserId:  userId,
+				IsAdmin: service.IsAdmin(c),
 			}
 
 			return claims, nil
@@ -139,7 +143,8 @@ func GenerateAccessToken(c *app.RequestContext) {
 	userId := service.GetUidFormContext(c)
 
 	data := &JwtCustomClaims{
-		UserId: userId,
+		UserId:  userId,
+		IsAdmin: service.IsAdmin(c),
 	}
 
 	tokenString, _, _ := AccessTokenJwtMiddleware.TokenGenerator(data)
@@ -179,6 +184,7 @@ func IsAccessTokenAvailable(ctx context.Context, c *app.RequestContext) bool {
 	identity := AccessTokenJwtMiddleware.IdentityHandler(ctx, c)
 	if identity != nil {
 		c.Set(constants.IdentityKey, identity.(*JwtCustomClaims).UserId)
+		c.Set(constants.Permission, identity.(*JwtCustomClaims).IsAdmin)
 	}
 	if !AccessTokenJwtMiddleware.Authorizator(identity, ctx, c) {
 		return false
@@ -222,6 +228,7 @@ func IsRefreshTokenAvailable(ctx context.Context, c *app.RequestContext) bool {
 	identity := RefreshTokenJwtMiddleware.IdentityHandler(ctx, c)
 	if identity != nil {
 		c.Set(constants.IdentityKey, identity.(*JwtCustomClaims).UserId)
+		c.Set(constants.Permission, identity.(*JwtCustomClaims).IsAdmin)
 	}
 	if !RefreshTokenJwtMiddleware.Authorizator(identity, ctx, c) {
 		return false
