@@ -3,6 +3,7 @@
 package user
 
 import (
+	"buycar/biz/middleware"
 	"buycar/biz/pack"
 	"buycar/biz/service"
 	"buycar/pkg/errno"
@@ -30,6 +31,12 @@ func Login(ctx context.Context, c *app.RequestContext) {
 		pack.BuildFailResponse(c, err)
 		return
 	}
+
+	middleware.AccessTokenJwtMiddleware.LoginHandler(ctx, c)
+	middleware.RefreshTokenJwtMiddleware.LoginHandler(ctx, c)
+
+	c.Header("Access-Token", c.GetString("Access-Token"))
+	c.Header("Refresh-Token", c.GetString("Refresh-Token"))
 
 	resp.BaseResponse = pack.BuildBaseResp(errno.Success)
 	resp.User = date

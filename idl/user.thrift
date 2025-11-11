@@ -4,7 +4,7 @@ include "model.thrift"
 
 // 用户登录
 struct LoginReq {
-  required string user_name;
+  required string username;
   required string password;
 }
 
@@ -15,7 +15,7 @@ struct LoginResp {
 
 // 用户注册
 struct RegisterReq {
-  required string user_name;
+  required string username;
   required string password;
 }
 

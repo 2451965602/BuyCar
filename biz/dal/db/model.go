@@ -7,19 +7,19 @@ import (
 )
 
 type User struct {
-	UserId    int64
-	UserName  string
-	Password  string
-	IsAdmin   bool
-	Score     int64
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	UserId       int64
+	Username     string
+	PasswordHash string
+	IsAdmin      bool
+	Score        int64
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }
 
 func (u User) ToModuleStruct() *module.User {
 	return &module.User{
 		UserID:    u.UserId,
-		Username:  u.UserName,
+		Username:  u.Username,
 		IsAdmin:   u.IsAdmin,
 		Score:     u.Score,
 		CreatedAt: u.CreatedAt.String(),

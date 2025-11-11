@@ -11,10 +11,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/hertz-contrib/jwt"
-	"github.com/satori/go.uuid"
-
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/hertz-contrib/jwt"
 )
 
 var (
@@ -23,8 +21,7 @@ var (
 )
 
 type JwtCustomClaims struct {
-	UserId int64  `json:"userid"`
-	UUID   string `json:"uuid"`
+	UserId int64 `json:"userid"`
 }
 
 func AccessTokenJwt() {
@@ -43,7 +40,6 @@ func AccessTokenJwt() {
 				return jwt.MapClaims{
 					AccessTokenJwtMiddleware.IdentityKey: v.UserId,
 					constants.TokenType:                  "access",
-					constants.UUID:                       v.UUID,
 				}
 			}
 			return jwt.MapClaims{}
@@ -53,7 +49,6 @@ func AccessTokenJwt() {
 			claims := jwt.ExtractClaims(ctx, c)
 			resp := &JwtCustomClaims{
 				UserId: int64(claims[RefreshTokenJwtMiddleware.IdentityKey].(float64)),
-				UUID:   claims[constants.UUID].(string),
 			}
 			return resp
 		},
@@ -78,7 +73,6 @@ func AccessTokenJwt() {
 			c.Set(constants.ContextUid, users.UserID)
 			claims := &JwtCustomClaims{
 				UserId: users.UserID,
-				UUID:   uuid.NewV1().String(),
 			}
 			return claims, nil
 		},
@@ -103,7 +97,6 @@ func RefreshTokenJwt() {
 				return jwt.MapClaims{
 					AccessTokenJwtMiddleware.IdentityKey: v.UserId,
 					constants.TokenType:                  "refresh",
-					constants.UUID:                       v.UUID,
 				}
 			}
 			return jwt.MapClaims{}
@@ -113,7 +106,6 @@ func RefreshTokenJwt() {
 			claims := jwt.ExtractClaims(ctx, c)
 			resp := &JwtCustomClaims{
 				UserId: int64(claims[RefreshTokenJwtMiddleware.IdentityKey].(float64)),
-				UUID:   claims[constants.UUID].(string),
 			}
 			return resp
 		},
@@ -128,11 +120,9 @@ func RefreshTokenJwt() {
 
 		Authenticator: func(ctx context.Context, c *app.RequestContext) (interface{}, error) {
 			userId := service.GetUidFormContext(c)
-			uuidStr := service.GetUuidFormContext(c)
 
 			claims := &JwtCustomClaims{
 				UserId: userId,
-				UUID:   uuidStr,
 			}
 
 			return claims, nil
@@ -147,11 +137,9 @@ func RefreshTokenJwt() {
 func GenerateAccessToken(c *app.RequestContext) {
 
 	userId := service.GetUidFormContext(c)
-	uuidStr := service.GetUuidFormContext(c)
 
 	data := &JwtCustomClaims{
 		UserId: userId,
-		UUID:   uuidStr,
 	}
 
 	tokenString, _, _ := AccessTokenJwtMiddleware.TokenGenerator(data)
@@ -191,7 +179,6 @@ func IsAccessTokenAvailable(ctx context.Context, c *app.RequestContext) bool {
 	identity := AccessTokenJwtMiddleware.IdentityHandler(ctx, c)
 	if identity != nil {
 		c.Set(constants.IdentityKey, identity.(*JwtCustomClaims).UserId)
-		c.Set(constants.UUID, identity.(*JwtCustomClaims).UUID)
 	}
 	if !AccessTokenJwtMiddleware.Authorizator(identity, ctx, c) {
 		return false
@@ -235,7 +222,6 @@ func IsRefreshTokenAvailable(ctx context.Context, c *app.RequestContext) bool {
 	identity := RefreshTokenJwtMiddleware.IdentityHandler(ctx, c)
 	if identity != nil {
 		c.Set(constants.IdentityKey, identity.(*JwtCustomClaims).UserId)
-		c.Set(constants.UUID, identity.(*JwtCustomClaims).UUID)
 	}
 	if !RefreshTokenJwtMiddleware.Authorizator(identity, ctx, c) {
 		return false
