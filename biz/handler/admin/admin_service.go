@@ -47,11 +47,14 @@ func AdminAddUser(ctx context.Context, c *app.RequestContext) {
 
 // AdminDeleteUser - 删除用户
 func AdminDeleteUser(ctx context.Context, c *app.RequestContext) {
-	var err error
 	var req admin.AdminDeleteUserReq
-	err = c.BindAndValidate(&req)
+	err := c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		c.JSON(consts.StatusBadRequest, map[string]string{
+			"error":   "validation_error",
+			"message": err.Error(),
+		})
+		c.Abort()
 		return
 	}
 
