@@ -10,7 +10,8 @@ const (
 )
 
 const (
-	UserTableName = "users"
-	ScoreTable    = "score_transactions"
-	GiftTable     = "gifts"
+	UserTableName    = "users"
+	ScoreTable       = "score_transactions"
+	GiftTable        = "gifts"
+	ConsultTableName = "consults"
 )

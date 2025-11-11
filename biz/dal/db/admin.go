@@ -55,7 +55,7 @@ func CreateUserByUserID(ctx context.Context, userIDStr, password string) error {
 func DeleteUserByUserID(ctx context.Context, userIDStr string) error {
 	// 先检查用户是否存在
 	var user User
-	err := DB.WithContext(ctx).Where("username = ?", userIDStr).First(&user).Error
+	err := DB.WithContext(ctx).Where("user_id = ?", userIDStr).First(&user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return errno.NewErrNo(errno.ServiceUserNotExist, "用户不存在")
@@ -64,7 +64,7 @@ func DeleteUserByUserID(ctx context.Context, userIDStr string) error {
 	}
 
 	// 执行删除
-	err = DB.WithContext(ctx).Where("username = ?", userIDStr).Delete(&User{}).Error
+	err = DB.WithContext(ctx).Where("user_id = ?", userIDStr).Delete(&User{}).Error
 	if err != nil {
 		return errno.NewErrNo(errno.InternalDatabaseErrorCode, "删除用户失败: "+err.Error())
 	}

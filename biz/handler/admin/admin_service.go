@@ -3,16 +3,15 @@
 package admin
 
 import (
+	"buycar/biz/service"
 	"context"
 
 	admin "buycar/biz/model/admin"
-
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
-// QueryAllConsults .
-// @router /api/admin/consult/query [GET]
+// QueryAllConsults - 查询所有咨询记录
 func QueryAllConsults(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req admin.QueryAllConsultsReq
@@ -22,13 +21,14 @@ func QueryAllConsults(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(admin.QueryAllConsultsResp)
+	// 调用服务层处理业务逻辑
+	adminService := &service.AdminService{}
+	resp := adminService.QueryAllConsults(ctx)
 
 	c.JSON(consts.StatusOK, resp)
 }
 
-// AdminAddUser .
-// @router /api/admin/user/add [POST]
+// AdminAddUser - 添加用户
 func AdminAddUser(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req admin.AdminAddUserReq
@@ -38,29 +38,34 @@ func AdminAddUser(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(admin.AdminAddUserResp)
+	// 调用服务层处理业务逻辑
+	adminService := &service.AdminService{}
+	resp := adminService.AdminAddUser(ctx, &req)
 
 	c.JSON(consts.StatusOK, resp)
 }
 
-// AdminDeleteUser .
-// @router /api/admin/user/delete [DELETE]
+// AdminDeleteUser - 删除用户
 func AdminDeleteUser(ctx context.Context, c *app.RequestContext) {
-	var err error
 	var req admin.AdminDeleteUserReq
-	err = c.BindAndValidate(&req)
+	err := c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		c.JSON(consts.StatusBadRequest, map[string]string{
+			"error":   "validation_error",
+			"message": err.Error(),
+		})
+		c.Abort()
 		return
 	}
 
-	resp := new(admin.AdminDeleteUserResp)
+	// 调用服务层处理业务逻辑
+	adminService := &service.AdminService{}
+	resp := adminService.AdminDeleteUser(ctx, &req)
 
 	c.JSON(consts.StatusOK, resp)
 }
 
-// QueryFeedbackAnalysis .
-// @router /api/admin/feedback/query [GET]
+// QueryFeedbackAnalysis - 查询用户反馈分析
 func QueryFeedbackAnalysis(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req admin.QueryFeedbackAnalysisReq
@@ -70,7 +75,9 @@ func QueryFeedbackAnalysis(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := new(admin.QueryFeedbackAnalysisResp)
+	// 调用服务层处理业务逻辑
+	adminService := &service.AdminService{}
+	resp := adminService.QueryFeedbackAnalysis(ctx)
 
 	c.JSON(consts.StatusOK, resp)
 }
