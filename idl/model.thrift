@@ -42,12 +42,12 @@ struct Feedback {
 struct Gift {
     required i64 gift_id,
     required string name,
-    optional string description,
-    required i32 points_cost,
-    required i32 stock,
+    required string description,
+    required i64 score_cost,
+    required i64 stock,
     required string status,
-    required i64 created_at,
-    required i64 updated_at,
+    required string created_at,
+    required string updated_at,
 }
 
 struct GiftRedemption {
@@ -62,10 +62,10 @@ struct GiftRedemption {
 
 struct ScoreTransaction {
     required i64 id,
-    required string user_id,
-    required i32 amount,
-    required string type,
-    optional string ref_id,
-    optional string description,
-    required i64 created_at,
+    required i64 user_id,
+    required i64 change_amount,
+    required string reason,
+    required i64 ref_id,
+    required string description,
+    required string created_at,
 }

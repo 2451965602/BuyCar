@@ -8,7 +8,7 @@ struct GetUserScoreReq {
 
 struct GetUserScoreResp {
   required model.BaseResp baseResponse;
-  required i32 score;
+  required i64 score;
 }
 
 // 兑换汽车周边

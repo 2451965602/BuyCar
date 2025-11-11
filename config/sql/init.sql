@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS gifts (
                                      gift_id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                      name VARCHAR(128) NOT NULL,
                                      description TEXT,
-                                     points_cost INT NOT NULL,
+                                     score_cost INT NOT NULL,
                                      stock INT NOT NULL DEFAULT 0,
                                      status ENUM('active','inactive') NOT NULL DEFAULT 'active',
                                      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -56,12 +56,12 @@ CREATE TABLE IF NOT EXISTS gifts (
                                      INDEX idx_gifts_status (status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE IF NOT EXISTS gift_redemptions (
+CREATE TABLE IF NOT EXISTS gift_purchase (
                                                 id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                                 gift_id BIGINT NOT NULL,
                                                 user_id VARCHAR(32) NOT NULL,
-                                                quantity INT NOT NULL DEFAULT 1,
-                                                points_spent INT NOT NULL,
+                                                number INT NOT NULL DEFAULT 1,
+                                                score_cost INT NOT NULL,
                                                 status ENUM('pending','completed','cancelled') NOT NULL DEFAULT 'completed',
                                                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                                 INDEX idx_redemptions_user (user_id),
@@ -73,12 +73,12 @@ CREATE TABLE IF NOT EXISTS gift_redemptions (
 CREATE TABLE IF NOT EXISTS score_transactions (
                                                   id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                                   user_id VARCHAR(32) NOT NULL,
-                                                  amount INT NOT NULL,
-                                                  type ENUM('consult','feedback','gift_redeem','manual_adjust','login','register') NOT NULL,
-                                                  ref_id VARCHAR(64) NULL,
+                                                  change_amount INT NOT NULL,
+                                                  reason ENUM('consult','feedback','gift_redeem','manual_adjust') NOT NULL,
+                                                  ref_id BIGINT NULL,
                                                   description VARCHAR(255) NULL,
                                                   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                                   INDEX idx_transactions_user (user_id),
-                                                  INDEX idx_transactions_type (type),
+                                                  INDEX idx_transactions_type (reason),
                                                   CONSTRAINT fk_transaction_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
