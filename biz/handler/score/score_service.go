@@ -3,11 +3,13 @@
 package score
 
 import (
+	"buycar/biz/pack"
+	"buycar/biz/service"
 	"context"
 
 	score "buycar/biz/model/score"
+
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
 // GetUserScore .
@@ -17,13 +19,19 @@ func GetUserScore(ctx context.Context, c *app.RequestContext) {
 	var req score.GetUserScoreReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.BuildFailResponse(c, err)
 		return
 	}
 
 	resp := new(score.GetUserScoreResp)
+	data, err := service.NewScoreService(ctx, c).GetUserScore()
+	if err != nil {
+		pack.BuildFailResponse(c, err)
+		return
+	}
+	resp.Score = data
 
-	c.JSON(consts.StatusOK, resp)
+	pack.SendResponse(c, resp)
 }
 
 // PurchaseGift .
@@ -33,13 +41,18 @@ func PurchaseGift(ctx context.Context, c *app.RequestContext) {
 	var req score.PurchaseGiftReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.BuildFailResponse(c, err)
 		return
 	}
 
 	resp := new(score.PurchaseGiftResp)
+	err = service.NewScoreService(ctx, c).PurchaseGift(req.GiftID)
+	if err != nil {
+		pack.BuildFailResponse(c, err)
+		return
+	}
 
-	c.JSON(consts.StatusOK, resp)
+	pack.SendResponse(c, resp)
 }
 
 // QueryGiftList .
@@ -49,11 +62,17 @@ func QueryGiftList(ctx context.Context, c *app.RequestContext) {
 	var req score.QueryGiftListReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		c.String(consts.StatusBadRequest, err.Error())
+		pack.BuildFailResponse(c, err)
 		return
 	}
 
 	resp := new(score.QueryGiftListResp)
+	data, err := service.NewScoreService(ctx, c).QueryGiftList()
+	if err != nil {
+		pack.BuildFailResponse(c, err)
+		return
+	}
+	resp.Gifts = data
 
-	c.JSON(consts.StatusOK, resp)
+	pack.SendResponse(c, resp)
 }

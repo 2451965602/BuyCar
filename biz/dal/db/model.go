@@ -86,3 +86,58 @@ func (c Consult) ToModuleStruct() *module.Consult {
 		UpdatedAt:       c.UpdatedAt.Unix(),
 	}
 }
+type ScoreTransaction struct {
+	Id           int64
+	UserId       int64
+	ChangeAmount int64
+	Reason       string
+	RefId        int64
+	Description  string
+	CreatedAt    time.Time
+}
+
+func (s ScoreTransaction) ToModuleStruct() *module.ScoreTransaction {
+	return &module.ScoreTransaction{
+		ID:           s.Id,
+		UserID:       s.UserId,
+		ChangeAmount: s.ChangeAmount,
+		Reason:       s.Reason,
+		RefID:        s.RefId,
+		Description:  s.Description,
+		CreatedAt:    s.CreatedAt.String(),
+	}
+}
+
+type Gift struct {
+	GiftId      int64
+	Name        string
+	Description string
+	ScoreCost   int64
+	Stock       int64
+	Status      string
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+}
+
+func (g Gift) ToModuleStruct() *module.Gift {
+	return &module.Gift{
+		GiftID:      g.GiftId,
+		Name:        g.Name,
+		Description: g.Description,
+		ScoreCost:   g.ScoreCost,
+		Stock:       g.Stock,
+		Status:      g.Status,
+		CreatedAt:   g.CreatedAt.String(),
+		UpdatedAt:   g.UpdatedAt.String(),
+	}
+}
+
+type GiftPurchase struct {
+	Id        int64
+	UserId    int64
+	GiftId    int64
+	Number    int64
+	ScoreCost int64
+	Status    string
+	CreatedAt time.Time
+}

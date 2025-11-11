@@ -69,26 +69,14 @@ const (
 // User Specific Errors (1100-1199)
 const (
 	UserPasswordIncorrect = 1100 + iota
-	UserPasswordFormatInvalid
-	UserUsernameFormatInvalid
-	UserEmailFormatInvalid
-	UserVerificationCodeInvalid
-	UserVerificationCodeExpired
-	UserAccountInactive
-	UserAccountSuspended
 )
 
-// Resource Module (2000-2099)
+// Gift Module (2000-2099)
 const (
-	ResourceNotFound = 2000 + iota
-	ResourceAccessDenied
-	ResourceUploadFailed
-	ResourceDownloadFailed
-	ResourceInvalidID
-	ResourceInvalidRating
-	ResourceInvalidComment
-	ResourceDuplicateOperation
-	ResourceReportInvalidReason
+	GiftNotFound = 2000 + iota
+	GiftOutOfStock
+	GiftPurchaseFailed
+	ScoreNotEnough
 )
 
 // Course Module (3000-3099)

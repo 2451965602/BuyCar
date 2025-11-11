@@ -49,3 +49,15 @@ func CreateFeedback(ctx context.Context, userId, ConsultId int64, content string
 	}
 	return nil
 }
+
+func GetUserByUserId(ctx context.Context, userId int64) (*User, error) {
+	var user User
+	err := DB.WithContext(ctx).Where("user_id = ?", userId).First(&user).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errno.NewErrNo(errno.ServiceUserNotExist, "用户不存在")
+		}
+		return nil, errno.NewErrNo(errno.InternalDatabaseErrorCode, "查询用户失败: "+err.Error())
+	}
+	return &user, nil
+}

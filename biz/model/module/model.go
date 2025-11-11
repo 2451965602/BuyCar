@@ -1863,14 +1863,14 @@ func (p *Feedback) String() string {
 }
 
 type Gift struct {
-	GiftID      int64   `thrift:"gift_id,1,required" form:"gift_id,required" json:"gift_id,required" query:"gift_id,required"`
-	Name        string  `thrift:"name,2,required" form:"name,required" json:"name,required" query:"name,required"`
-	Description *string `thrift:"description,3,optional" form:"description" json:"description,omitempty" query:"description"`
-	PointsCost  int32   `thrift:"points_cost,4,required" form:"points_cost,required" json:"points_cost,required" query:"points_cost,required"`
-	Stock       int32   `thrift:"stock,5,required" form:"stock,required" json:"stock,required" query:"stock,required"`
-	Status      string  `thrift:"status,6,required" form:"status,required" json:"status,required" query:"status,required"`
-	CreatedAt   int64   `thrift:"created_at,7,required" form:"created_at,required" json:"created_at,required" query:"created_at,required"`
-	UpdatedAt   int64   `thrift:"updated_at,8,required" form:"updated_at,required" json:"updated_at,required" query:"updated_at,required"`
+	GiftID      int64  `thrift:"gift_id,1,required" form:"gift_id,required" json:"gift_id,required" query:"gift_id,required"`
+	Name        string `thrift:"name,2,required" form:"name,required" json:"name,required" query:"name,required"`
+	Description string `thrift:"description,3,required" form:"description,required" json:"description,required" query:"description,required"`
+	ScoreCost   int64  `thrift:"score_cost,4,required" form:"score_cost,required" json:"score_cost,required" query:"score_cost,required"`
+	Stock       int64  `thrift:"stock,5,required" form:"stock,required" json:"stock,required" query:"stock,required"`
+	Status      string `thrift:"status,6,required" form:"status,required" json:"status,required" query:"status,required"`
+	CreatedAt   string `thrift:"created_at,7,required" form:"created_at,required" json:"created_at,required" query:"created_at,required"`
+	UpdatedAt   string `thrift:"updated_at,8,required" form:"updated_at,required" json:"updated_at,required" query:"updated_at,required"`
 }
 
 func NewGift() *Gift {
@@ -1888,20 +1888,15 @@ func (p *Gift) GetName() (v string) {
 	return p.Name
 }
 
-var Gift_Description_DEFAULT string
-
 func (p *Gift) GetDescription() (v string) {
-	if !p.IsSetDescription() {
-		return Gift_Description_DEFAULT
-	}
-	return *p.Description
+	return p.Description
 }
 
-func (p *Gift) GetPointsCost() (v int32) {
-	return p.PointsCost
+func (p *Gift) GetScoreCost() (v int64) {
+	return p.ScoreCost
 }
 
-func (p *Gift) GetStock() (v int32) {
+func (p *Gift) GetStock() (v int64) {
 	return p.Stock
 }
 
@@ -1909,11 +1904,11 @@ func (p *Gift) GetStatus() (v string) {
 	return p.Status
 }
 
-func (p *Gift) GetCreatedAt() (v int64) {
+func (p *Gift) GetCreatedAt() (v string) {
 	return p.CreatedAt
 }
 
-func (p *Gift) GetUpdatedAt() (v int64) {
+func (p *Gift) GetUpdatedAt() (v string) {
 	return p.UpdatedAt
 }
 
@@ -1921,15 +1916,11 @@ var fieldIDToName_Gift = map[int16]string{
 	1: "gift_id",
 	2: "name",
 	3: "description",
-	4: "points_cost",
+	4: "score_cost",
 	5: "stock",
 	6: "status",
 	7: "created_at",
 	8: "updated_at",
-}
-
-func (p *Gift) IsSetDescription() bool {
-	return p.Description != nil
 }
 
 func (p *Gift) Read(iprot thrift.TProtocol) (err error) {
@@ -1938,7 +1929,8 @@ func (p *Gift) Read(iprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	var issetGiftID bool = false
 	var issetName bool = false
-	var issetPointsCost bool = false
+	var issetDescription bool = false
+	var issetScoreCost bool = false
 	var issetStock bool = false
 	var issetStatus bool = false
 	var issetCreatedAt bool = false
@@ -1981,20 +1973,21 @@ func (p *Gift) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField3(iprot); err != nil {
 					goto ReadFieldError
 				}
+				issetDescription = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
 		case 4:
-			if fieldTypeId == thrift.I32 {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField4(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetPointsCost = true
+				issetScoreCost = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
 		case 5:
-			if fieldTypeId == thrift.I32 {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField5(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -2012,7 +2005,7 @@ func (p *Gift) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 7:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField7(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -2021,7 +2014,7 @@ func (p *Gift) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 8:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField8(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -2052,7 +2045,12 @@ func (p *Gift) Read(iprot thrift.TProtocol) (err error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetPointsCost {
+	if !issetDescription {
+		fieldId = 3
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetScoreCost {
 		fieldId = 4
 		goto RequiredFieldNotSetError
 	}
@@ -2118,30 +2116,30 @@ func (p *Gift) ReadField2(iprot thrift.TProtocol) error {
 }
 func (p *Gift) ReadField3(iprot thrift.TProtocol) error {
 
-	var _field *string
+	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
-		_field = &v
+		_field = v
 	}
 	p.Description = _field
 	return nil
 }
 func (p *Gift) ReadField4(iprot thrift.TProtocol) error {
 
-	var _field int32
-	if v, err := iprot.ReadI32(); err != nil {
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
 		_field = v
 	}
-	p.PointsCost = _field
+	p.ScoreCost = _field
 	return nil
 }
 func (p *Gift) ReadField5(iprot thrift.TProtocol) error {
 
-	var _field int32
-	if v, err := iprot.ReadI32(); err != nil {
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
 		_field = v
@@ -2162,8 +2160,8 @@ func (p *Gift) ReadField6(iprot thrift.TProtocol) error {
 }
 func (p *Gift) ReadField7(iprot thrift.TProtocol) error {
 
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
 		_field = v
@@ -2173,8 +2171,8 @@ func (p *Gift) ReadField7(iprot thrift.TProtocol) error {
 }
 func (p *Gift) ReadField8(iprot thrift.TProtocol) error {
 
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
 		_field = v
@@ -2274,16 +2272,14 @@ WriteFieldEndError:
 }
 
 func (p *Gift) writeField3(oprot thrift.TProtocol) (err error) {
-	if p.IsSetDescription() {
-		if err = oprot.WriteFieldBegin("description", thrift.STRING, 3); err != nil {
-			goto WriteFieldBeginError
-		}
-		if err := oprot.WriteString(*p.Description); err != nil {
-			return err
-		}
-		if err = oprot.WriteFieldEnd(); err != nil {
-			goto WriteFieldEndError
-		}
+	if err = oprot.WriteFieldBegin("description", thrift.STRING, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Description); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
 	}
 	return nil
 WriteFieldBeginError:
@@ -2293,10 +2289,10 @@ WriteFieldEndError:
 }
 
 func (p *Gift) writeField4(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("points_cost", thrift.I32, 4); err != nil {
+	if err = oprot.WriteFieldBegin("score_cost", thrift.I64, 4); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI32(p.PointsCost); err != nil {
+	if err := oprot.WriteI64(p.ScoreCost); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -2310,10 +2306,10 @@ WriteFieldEndError:
 }
 
 func (p *Gift) writeField5(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("stock", thrift.I32, 5); err != nil {
+	if err = oprot.WriteFieldBegin("stock", thrift.I64, 5); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI32(p.Stock); err != nil {
+	if err := oprot.WriteI64(p.Stock); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -2344,10 +2340,10 @@ WriteFieldEndError:
 }
 
 func (p *Gift) writeField7(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("created_at", thrift.I64, 7); err != nil {
+	if err = oprot.WriteFieldBegin("created_at", thrift.STRING, 7); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.CreatedAt); err != nil {
+	if err := oprot.WriteString(p.CreatedAt); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -2361,10 +2357,10 @@ WriteFieldEndError:
 }
 
 func (p *Gift) writeField8(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("updated_at", thrift.I64, 8); err != nil {
+	if err = oprot.WriteFieldBegin("updated_at", thrift.STRING, 8); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.UpdatedAt); err != nil {
+	if err := oprot.WriteString(p.UpdatedAt); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -2852,13 +2848,13 @@ func (p *GiftRedemption) String() string {
 }
 
 type ScoreTransaction struct {
-	ID          int64   `thrift:"id,1,required" form:"id,required" json:"id,required" query:"id,required"`
-	UserID      string  `thrift:"user_id,2,required" form:"user_id,required" json:"user_id,required" query:"user_id,required"`
-	Amount      int32   `thrift:"amount,3,required" form:"amount,required" json:"amount,required" query:"amount,required"`
-	Type        string  `thrift:"type,4,required" form:"type,required" json:"type,required" query:"type,required"`
-	RefID       *string `thrift:"ref_id,5,optional" form:"ref_id" json:"ref_id,omitempty" query:"ref_id"`
-	Description *string `thrift:"description,6,optional" form:"description" json:"description,omitempty" query:"description"`
-	CreatedAt   int64   `thrift:"created_at,7,required" form:"created_at,required" json:"created_at,required" query:"created_at,required"`
+	ID           int64  `thrift:"id,1,required" form:"id,required" json:"id,required" query:"id,required"`
+	UserID       int64  `thrift:"user_id,2,required" form:"user_id,required" json:"user_id,required" query:"user_id,required"`
+	ChangeAmount int64  `thrift:"change_amount,3,required" form:"change_amount,required" json:"change_amount,required" query:"change_amount,required"`
+	Reason       string `thrift:"reason,4,required" form:"reason,required" json:"reason,required" query:"reason,required"`
+	RefID        int64  `thrift:"ref_id,5,required" form:"ref_id,required" json:"ref_id,required" query:"ref_id,required"`
+	Description  string `thrift:"description,6,required" form:"description,required" json:"description,required" query:"description,required"`
+	CreatedAt    string `thrift:"created_at,7,required" form:"created_at,required" json:"created_at,required" query:"created_at,required"`
 }
 
 func NewScoreTransaction() *ScoreTransaction {
@@ -2872,56 +2868,38 @@ func (p *ScoreTransaction) GetID() (v int64) {
 	return p.ID
 }
 
-func (p *ScoreTransaction) GetUserID() (v string) {
+func (p *ScoreTransaction) GetUserID() (v int64) {
 	return p.UserID
 }
 
-func (p *ScoreTransaction) GetAmount() (v int32) {
-	return p.Amount
+func (p *ScoreTransaction) GetChangeAmount() (v int64) {
+	return p.ChangeAmount
 }
 
-func (p *ScoreTransaction) GetType() (v string) {
-	return p.Type
+func (p *ScoreTransaction) GetReason() (v string) {
+	return p.Reason
 }
 
-var ScoreTransaction_RefID_DEFAULT string
-
-func (p *ScoreTransaction) GetRefID() (v string) {
-	if !p.IsSetRefID() {
-		return ScoreTransaction_RefID_DEFAULT
-	}
-	return *p.RefID
+func (p *ScoreTransaction) GetRefID() (v int64) {
+	return p.RefID
 }
-
-var ScoreTransaction_Description_DEFAULT string
 
 func (p *ScoreTransaction) GetDescription() (v string) {
-	if !p.IsSetDescription() {
-		return ScoreTransaction_Description_DEFAULT
-	}
-	return *p.Description
+	return p.Description
 }
 
-func (p *ScoreTransaction) GetCreatedAt() (v int64) {
+func (p *ScoreTransaction) GetCreatedAt() (v string) {
 	return p.CreatedAt
 }
 
 var fieldIDToName_ScoreTransaction = map[int16]string{
 	1: "id",
 	2: "user_id",
-	3: "amount",
-	4: "type",
+	3: "change_amount",
+	4: "reason",
 	5: "ref_id",
 	6: "description",
 	7: "created_at",
-}
-
-func (p *ScoreTransaction) IsSetRefID() bool {
-	return p.RefID != nil
-}
-
-func (p *ScoreTransaction) IsSetDescription() bool {
-	return p.Description != nil
 }
 
 func (p *ScoreTransaction) Read(iprot thrift.TProtocol) (err error) {
@@ -2930,8 +2908,10 @@ func (p *ScoreTransaction) Read(iprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	var issetID bool = false
 	var issetUserID bool = false
-	var issetAmount bool = false
-	var issetType bool = false
+	var issetChangeAmount bool = false
+	var issetReason bool = false
+	var issetRefID bool = false
+	var issetDescription bool = false
 	var issetCreatedAt bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
@@ -2958,7 +2938,7 @@ func (p *ScoreTransaction) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 2:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -2967,11 +2947,11 @@ func (p *ScoreTransaction) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 3:
-			if fieldTypeId == thrift.I32 {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField3(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetAmount = true
+				issetChangeAmount = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -2980,15 +2960,16 @@ func (p *ScoreTransaction) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField4(iprot); err != nil {
 					goto ReadFieldError
 				}
-				issetType = true
+				issetReason = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
 		case 5:
-			if fieldTypeId == thrift.STRING {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField5(iprot); err != nil {
 					goto ReadFieldError
 				}
+				issetRefID = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
@@ -2997,11 +2978,12 @@ func (p *ScoreTransaction) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField6(iprot); err != nil {
 					goto ReadFieldError
 				}
+				issetDescription = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
 		case 7:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField7(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -3032,13 +3014,23 @@ func (p *ScoreTransaction) Read(iprot thrift.TProtocol) (err error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetAmount {
+	if !issetChangeAmount {
 		fieldId = 3
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetType {
+	if !issetReason {
 		fieldId = 4
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetRefID {
+		fieldId = 5
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetDescription {
+		fieldId = 6
 		goto RequiredFieldNotSetError
 	}
 
@@ -3077,8 +3069,8 @@ func (p *ScoreTransaction) ReadField1(iprot thrift.TProtocol) error {
 }
 func (p *ScoreTransaction) ReadField2(iprot thrift.TProtocol) error {
 
-	var _field string
-	if v, err := iprot.ReadString(); err != nil {
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
 		_field = v
@@ -3088,13 +3080,13 @@ func (p *ScoreTransaction) ReadField2(iprot thrift.TProtocol) error {
 }
 func (p *ScoreTransaction) ReadField3(iprot thrift.TProtocol) error {
 
-	var _field int32
-	if v, err := iprot.ReadI32(); err != nil {
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
 		_field = v
 	}
-	p.Amount = _field
+	p.ChangeAmount = _field
 	return nil
 }
 func (p *ScoreTransaction) ReadField4(iprot thrift.TProtocol) error {
@@ -3105,35 +3097,35 @@ func (p *ScoreTransaction) ReadField4(iprot thrift.TProtocol) error {
 	} else {
 		_field = v
 	}
-	p.Type = _field
+	p.Reason = _field
 	return nil
 }
 func (p *ScoreTransaction) ReadField5(iprot thrift.TProtocol) error {
 
-	var _field *string
-	if v, err := iprot.ReadString(); err != nil {
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
-		_field = &v
+		_field = v
 	}
 	p.RefID = _field
 	return nil
 }
 func (p *ScoreTransaction) ReadField6(iprot thrift.TProtocol) error {
 
-	var _field *string
+	var _field string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
-		_field = &v
+		_field = v
 	}
 	p.Description = _field
 	return nil
 }
 func (p *ScoreTransaction) ReadField7(iprot thrift.TProtocol) error {
 
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
 		_field = v
@@ -3212,10 +3204,10 @@ WriteFieldEndError:
 }
 
 func (p *ScoreTransaction) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("user_id", thrift.STRING, 2); err != nil {
+	if err = oprot.WriteFieldBegin("user_id", thrift.I64, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.UserID); err != nil {
+	if err := oprot.WriteI64(p.UserID); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -3229,10 +3221,10 @@ WriteFieldEndError:
 }
 
 func (p *ScoreTransaction) writeField3(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("amount", thrift.I32, 3); err != nil {
+	if err = oprot.WriteFieldBegin("change_amount", thrift.I64, 3); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI32(p.Amount); err != nil {
+	if err := oprot.WriteI64(p.ChangeAmount); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -3246,10 +3238,10 @@ WriteFieldEndError:
 }
 
 func (p *ScoreTransaction) writeField4(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("type", thrift.STRING, 4); err != nil {
+	if err = oprot.WriteFieldBegin("reason", thrift.STRING, 4); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.Type); err != nil {
+	if err := oprot.WriteString(p.Reason); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -3263,16 +3255,14 @@ WriteFieldEndError:
 }
 
 func (p *ScoreTransaction) writeField5(oprot thrift.TProtocol) (err error) {
-	if p.IsSetRefID() {
-		if err = oprot.WriteFieldBegin("ref_id", thrift.STRING, 5); err != nil {
-			goto WriteFieldBeginError
-		}
-		if err := oprot.WriteString(*p.RefID); err != nil {
-			return err
-		}
-		if err = oprot.WriteFieldEnd(); err != nil {
-			goto WriteFieldEndError
-		}
+	if err = oprot.WriteFieldBegin("ref_id", thrift.I64, 5); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteI64(p.RefID); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
 	}
 	return nil
 WriteFieldBeginError:
@@ -3282,16 +3272,14 @@ WriteFieldEndError:
 }
 
 func (p *ScoreTransaction) writeField6(oprot thrift.TProtocol) (err error) {
-	if p.IsSetDescription() {
-		if err = oprot.WriteFieldBegin("description", thrift.STRING, 6); err != nil {
-			goto WriteFieldBeginError
-		}
-		if err := oprot.WriteString(*p.Description); err != nil {
-			return err
-		}
-		if err = oprot.WriteFieldEnd(); err != nil {
-			goto WriteFieldEndError
-		}
+	if err = oprot.WriteFieldBegin("description", thrift.STRING, 6); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Description); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
 	}
 	return nil
 WriteFieldBeginError:
@@ -3301,10 +3289,10 @@ WriteFieldEndError:
 }
 
 func (p *ScoreTransaction) writeField7(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("created_at", thrift.I64, 7); err != nil {
+	if err = oprot.WriteFieldBegin("created_at", thrift.STRING, 7); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.CreatedAt); err != nil {
+	if err := oprot.WriteString(p.CreatedAt); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
