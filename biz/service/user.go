@@ -28,7 +28,7 @@ func (s *UserService) Register(req *user.RegisterReq) error {
 
 	req.Password = passwordHash
 
-	err = db.CreateUser(s.ctx, req.UserName, req.Password)
+	err = db.CreateUser(s.ctx, req.Username, req.Password)
 	if err != nil {
 		return err
 	}
@@ -36,17 +36,15 @@ func (s *UserService) Register(req *user.RegisterReq) error {
 }
 
 func (s *UserService) LoginIn(req *user.LoginReq) (*module.User, error) {
-	userInfo, err := db.GetUserByUserName(s.ctx, req.UserName)
+	userInfo, err := db.GetUserByUserName(s.ctx, req.Username)
 	if err != nil {
 		return nil, err
 	}
 
-	err = utils.ComparePassword(userInfo.Password, req.Password)
+	err = utils.ComparePassword(userInfo.PasswordHash, req.Password)
 	if err != nil {
 		return nil, err
 	}
-
-	userInfo.Password = ""
 
 	return userInfo.ToModuleStruct(), nil
 }

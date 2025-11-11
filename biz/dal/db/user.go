@@ -10,14 +10,14 @@ import (
 
 func CreateUser(ctx context.Context, username, password string) error {
 	user := &User{
-		UserName: username,
-		Password: password,
+		Username:     username,
+		PasswordHash: password,
 	}
 
 	err := DB.WithContext(ctx).Create(user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return errno.ServiceUserExist
+			return errno.NewErrNo(errno.ServiceUserExist, " 用户已存在")
 		}
 		return errno.NewErrNo(errno.InternalDatabaseErrorCode, "创建用户失败: "+err.Error())
 	}
@@ -30,7 +30,7 @@ func GetUserByUserName(ctx context.Context, username string) (*User, error) {
 	err := DB.WithContext(ctx).Where("username = ?", username).First(&user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errno.ServiceUserNotExist
+			return nil, errno.NewErrNo(errno.ServiceUserNotExist, "用户不存在")
 		}
 		return nil, errno.NewErrNo(errno.InternalDatabaseErrorCode, "查询用户失败: "+err.Error())
 	}
