@@ -95,7 +95,7 @@ func (p *GetUserScoreReq) String() string {
 
 type GetUserScoreResp struct {
 	BaseResponse *module.BaseResp `thrift:"baseResponse,1,required" form:"baseResponse,required" json:"baseResponse,required" query:"baseResponse,required"`
-	Score        int32            `thrift:"score,2,required" form:"score,required" json:"score,required" query:"score,required"`
+	Score        int64            `thrift:"score,2,required" form:"score,required" json:"score,required" query:"score,required"`
 }
 
 func NewGetUserScoreResp() *GetUserScoreResp {
@@ -114,7 +114,7 @@ func (p *GetUserScoreResp) GetBaseResponse() (v *module.BaseResp) {
 	return p.BaseResponse
 }
 
-func (p *GetUserScoreResp) GetScore() (v int32) {
+func (p *GetUserScoreResp) GetScore() (v int64) {
 	return p.Score
 }
 
@@ -158,7 +158,7 @@ func (p *GetUserScoreResp) Read(iprot thrift.TProtocol) (err error) {
 				goto SkipFieldError
 			}
 		case 2:
-			if fieldTypeId == thrift.I32 {
+			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -216,8 +216,8 @@ func (p *GetUserScoreResp) ReadField1(iprot thrift.TProtocol) error {
 }
 func (p *GetUserScoreResp) ReadField2(iprot thrift.TProtocol) error {
 
-	var _field int32
-	if v, err := iprot.ReadI32(); err != nil {
+	var _field int64
+	if v, err := iprot.ReadI64(); err != nil {
 		return err
 	} else {
 		_field = v
@@ -276,10 +276,10 @@ WriteFieldEndError:
 }
 
 func (p *GetUserScoreResp) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("score", thrift.I32, 2); err != nil {
+	if err = oprot.WriteFieldBegin("score", thrift.I64, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI32(p.Score); err != nil {
+	if err := oprot.WriteI64(p.Score); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {

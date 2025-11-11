@@ -58,31 +58,25 @@ const (
 	ErrRecordNotFound
 	UserLogOut
 	UserAlreadyLogin
+
+	ServiceConsultNotExist    // 咨询记录不存在
+	ServiceFeedbackNotExist   // 反馈记录不存在
+	ServiceUserCreationFailed // 用户创建失败
+	ServiceUserDeletionFailed // 用户删除失败
+
 )
 
 // User Specific Errors (1100-1199)
 const (
 	UserPasswordIncorrect = 1100 + iota
-	UserPasswordFormatInvalid
-	UserUsernameFormatInvalid
-	UserEmailFormatInvalid
-	UserVerificationCodeInvalid
-	UserVerificationCodeExpired
-	UserAccountInactive
-	UserAccountSuspended
 )
 
-// Resource Module (2000-2099)
+// Gift Module (2000-2099)
 const (
-	ResourceNotFound = 2000 + iota
-	ResourceAccessDenied
-	ResourceUploadFailed
-	ResourceDownloadFailed
-	ResourceInvalidID
-	ResourceInvalidRating
-	ResourceInvalidComment
-	ResourceDuplicateOperation
-	ResourceReportInvalidReason
+	GiftNotFound = 2000 + iota
+	GiftOutOfStock
+	GiftPurchaseFailed
+	ScoreNotEnough
 )
 
 // Course Module (3000-3099)

@@ -1,6 +1,9 @@
 package db
 
 import (
+	"buycar/pkg/constants"
+	"buycar/pkg/errno"
+	"buycar/pkg/utils"
 	"fmt"
 
 	"gorm.io/driver/mysql"

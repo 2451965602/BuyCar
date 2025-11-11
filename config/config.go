@@ -7,15 +7,10 @@ import (
 )
 
 var (
-    Mysql        *mySQL
-    Redis        *redis
-    Oss          *oss
-    Smtp         *smtp
-    Verify       *verify
-    Server       *server
-    Turnstile    *turnstile
-    LLM          *llm
-    runtimeViper = viper.New()
+	Mysql        *mySQL
+	Server       *server
+	AiEndpoint   *aiEndpoint
+	runtimeViper = viper.New()
 )
 
 // Init 目的是初始化并读入配置
@@ -48,11 +43,7 @@ func configMapping() {
 		logger.Fatalf("config.configMapping: 配置反序列化失败: %v", err)
 	}
 	Mysql = &c.MySQL
-	Redis = &c.Redis
-	Oss = &c.OSS
-	Smtp = &c.Smtp
-    Verify = &c.Verify
-    Server = &c.Server
-    Turnstile = &c.Turnstile
-    LLM = &c.LLM
+	Server = &c.Server
+	AiEndpoint = &c.AiEndpoint
+
 }

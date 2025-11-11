@@ -3,6 +3,8 @@
 package user
 
 import (
+	"buycar/biz/router/auth"
+
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
@@ -23,7 +25,7 @@ func _userMw() []app.HandlerFunc {
 
 func _feedbackMw() []app.HandlerFunc {
 	// your code...
-	return nil
+	return auth.Auth()
 }
 
 func _loginMw() []app.HandlerFunc {
