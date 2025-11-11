@@ -29,7 +29,7 @@ func ListAllConsults(ctx context.Context) ([]*Consult, error) {
 func CreateUserByUserID(ctx context.Context, userIDStr, password string) error {
 	// 检查用户名是否已存在
 	var existing User
-	err := DB.WithContext(ctx).Where("username = ?", userIDStr).First(&existing).Error
+	err := DB.WithContext(ctx).Where("user_id = ?", userIDStr).First(&existing).Error
 	if err == nil {
 		return errno.NewErrNo(errno.ServiceUserExist, "用户已存在")
 	}

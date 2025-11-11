@@ -7,9 +7,18 @@ import (
 	"buycar/pkg/errno"
 	"context"
 	"errors"
+
+	"github.com/cloudwego/hertz/pkg/app"
 )
 
-type AdminService struct{}
+type AdminService struct {
+	ctx context.Context
+	c   *app.RequestContext
+}
+
+func NewAdminService(ctx context.Context, c *app.RequestContext) *AdminService {
+	return &AdminService{ctx: ctx, c: c}
+}
 
 // QueryAllConsults 查询所有咨询记录
 func (s *AdminService) QueryAllConsults(ctx context.Context) *admin.QueryAllConsultsResp {
