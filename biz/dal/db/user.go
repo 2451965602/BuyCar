@@ -9,10 +9,12 @@ import (
 	"gorm.io/gorm"
 )
 
-func CreateUser(ctx context.Context, username, password, email string) error {
+func CreateUser(ctx context.Context, username, password, email, name, telephone string) error {
 	user := &User{
 		Username:     username,
 		Email:        email,
+		Name:         name,
+		telephone:    telephone,
 		PasswordHash: password,
 	}
 

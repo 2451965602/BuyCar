@@ -8,6 +8,8 @@ struct BaseResp {
 struct User {
     required i64 user_id,
     required string username,
+    required string name,
+    required string telephone,
     required string email,
     optional string password_hash,
     required bool is_admin,

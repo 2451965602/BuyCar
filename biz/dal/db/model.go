@@ -10,6 +10,8 @@ type User struct {
 	UserId       int64
 	Username     string
 	Email        string
+	Name         string
+	telephone    string
 	PasswordHash string
 	IsAdmin      bool
 	Score        int64
