@@ -322,8 +322,8 @@ func (p *QueryAllConsultsResp) String() string {
 
 // 添加用户
 type AdminAddUserReq struct {
-	UserID   string `thrift:"user_id,1,required" form:"user_id,required" json:"user_id,required" query:"user_id,required"`
 	Password string `thrift:"password,2,required" form:"password,required" json:"password,required" query:"password,required"`
+	Username string `thrift:"username,1,required" form:"username,required" json:"username,required" query:"username,required"`
 }
 
 func NewAdminAddUserReq() *AdminAddUserReq {
@@ -333,8 +333,8 @@ func NewAdminAddUserReq() *AdminAddUserReq {
 func (p *AdminAddUserReq) InitDefault() {
 }
 
-func (p *AdminAddUserReq) GetUserID() (v string) {
-	return p.UserID
+func (p *AdminAddUserReq) GetUsername() (v string) {
+	return p.Username
 }
 
 func (p *AdminAddUserReq) GetPassword() (v string) {
@@ -433,7 +433,7 @@ func (p *AdminAddUserReq) ReadField1(iprot thrift.TProtocol) error {
 	} else {
 		_field = v
 	}
-	p.UserID = _field
+	p.Username = _field
 	return nil
 }
 func (p *AdminAddUserReq) ReadField2(iprot thrift.TProtocol) error {
@@ -484,7 +484,7 @@ func (p *AdminAddUserReq) writeField1(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("user_id", thrift.STRING, 1); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.UserID); err != nil {
+	if err := oprot.WriteString(p.Username); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -678,7 +678,7 @@ func (p *AdminAddUserResp) String() string {
 
 // 删除用户
 type AdminDeleteUserReq struct {
-	UserID string `thrift:"user_id,1,required" form:"user_id,required" json:"user_id,required" query:"user_id,required"`
+	Username string `thrift:"username,1,required" form:"username,required" json:"username,required" query:"username,required"`
 }
 
 func NewAdminDeleteUserReq() *AdminDeleteUserReq {
@@ -689,11 +689,11 @@ func (p *AdminDeleteUserReq) InitDefault() {
 }
 
 func (p *AdminDeleteUserReq) GetUserID() (v string) {
-	return p.UserID
+	return p.Username
 }
 
 var fieldIDToName_AdminDeleteUserReq = map[int16]string{
-	1: "user_id",
+	1: "username",
 }
 
 func (p *AdminDeleteUserReq) Read(iprot thrift.TProtocol) (err error) {
@@ -768,7 +768,7 @@ func (p *AdminDeleteUserReq) ReadField1(iprot thrift.TProtocol) error {
 	} else {
 		_field = v
 	}
-	p.UserID = _field
+	p.Username = _field
 	return nil
 }
 
@@ -804,7 +804,7 @@ func (p *AdminDeleteUserReq) writeField1(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("user_id", thrift.STRING, 1); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.UserID); err != nil {
+	if err := oprot.WriteString(p.Username); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
