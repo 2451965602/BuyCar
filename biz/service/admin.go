@@ -5,11 +5,21 @@ import (
 	"buycar/biz/model/admin"
 	"buycar/biz/model/module"
 	"buycar/pkg/errno"
+	"buycar/pkg/utils"
 	"context"
 	"errors"
+
+	"github.com/cloudwego/hertz/pkg/app"
 )
 
-type AdminService struct{}
+type AdminService struct {
+	ctx context.Context
+	c   *app.RequestContext
+}
+
+func NewAdminService(ctx context.Context, c *app.RequestContext) *AdminService {
+	return &AdminService{ctx: ctx, c: c}
+}
 
 // QueryAllConsults 查询所有咨询记录
 func (s *AdminService) QueryAllConsults(ctx context.Context) *admin.QueryAllConsultsResp {
@@ -43,8 +53,18 @@ func (s *AdminService) QueryAllConsults(ctx context.Context) *admin.QueryAllCons
 
 // AdminAddUser 添加用户
 func (s *AdminService) AdminAddUser(ctx context.Context, req *admin.AdminAddUserReq) *admin.AdminAddUserResp {
-	// 调用数据库层创建用户
-	err := db.CreateUserByUserID(ctx, req.UserID, req.Password)
+	// 密码加密处理
+	passwordHash, err := utils.EncryptPassword(req.Password)
+	if err != nil {
+		return &admin.AdminAddUserResp{
+			BaseResponse: &module.BaseResp{
+				Message: "密码加密失败: " + err.Error(),
+			},
+		}
+	}
+
+	// 使用与 UserService.Register 相同的风格调用数据库层方法
+	err = db.AdminCreateUser(ctx, req.Username, passwordHash)
 	if err != nil {
 		var Err *errno.ErrNo
 		errors.As(err, &Err)
@@ -67,7 +87,7 @@ func (s *AdminService) AdminAddUser(ctx context.Context, req *admin.AdminAddUser
 // AdminDeleteUser 删除用户
 func (s *AdminService) AdminDeleteUser(ctx context.Context, req *admin.AdminDeleteUserReq) *admin.AdminDeleteUserResp {
 	// 调用数据库层删除用户
-	err := db.DeleteUserByUserID(ctx, req.UserID)
+	err := db.DeleteUserByUserID(ctx, req.Username)
 	if err != nil {
 		var Err *errno.ErrNo
 		errors.As(err, &Err)
