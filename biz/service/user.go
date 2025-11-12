@@ -28,7 +28,7 @@ func (s *UserService) Register(req *user.RegisterReq) error {
 
 	req.Password = passwordHash
 
-	err = db.CreateUser(s.ctx, req.Username, req.Password)
+	err = db.CreateUser(s.ctx, req.Username, req.Password, req.Email)
 	if err != nil {
 		return err
 	}

@@ -5,12 +5,14 @@ import (
 	"buycar/pkg/errno"
 	"context"
 	"errors"
+
 	"gorm.io/gorm"
 )
 
-func CreateUser(ctx context.Context, username, password string) error {
+func CreateUser(ctx context.Context, username, password, email string) error {
 	user := &User{
 		Username:     username,
+		Email:        email,
 		PasswordHash: password,
 	}
 

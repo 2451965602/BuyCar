@@ -211,11 +211,12 @@ func (p *BaseResp) String() string {
 type User struct {
 	UserID       int64   `thrift:"user_id,1,required" form:"user_id,required" json:"user_id,required" query:"user_id,required"`
 	Username     string  `thrift:"username,2,required" form:"username,required" json:"username,required" query:"username,required"`
-	PasswordHash *string `thrift:"password_hash,3,optional" form:"password_hash" json:"password_hash,omitempty" query:"password_hash"`
-	IsAdmin      bool    `thrift:"is_admin,4,required" form:"is_admin,required" json:"is_admin,required" query:"is_admin,required"`
-	Score        int64   `thrift:"score,5,required" form:"score,required" json:"score,required" query:"score,required"`
-	CreatedAt    string  `thrift:"created_at,6,required" form:"created_at,required" json:"created_at,required" query:"created_at,required"`
-	UpdatedAt    string  `thrift:"updated_at,7,required" form:"updated_at,required" json:"updated_at,required" query:"updated_at,required"`
+	Email        string  `thrift:"email,3,required" form:"email,required" json:"email,required" query:"email,required"`
+	PasswordHash *string `thrift:"password_hash,4,optional" form:"password_hash" json:"password_hash,omitempty" query:"password_hash"`
+	IsAdmin      bool    `thrift:"is_admin,5,required" form:"is_admin,required" json:"is_admin,required" query:"is_admin,required"`
+	Score        int64   `thrift:"score,6,required" form:"score,required" json:"score,required" query:"score,required"`
+	CreatedAt    string  `thrift:"created_at,7,required" form:"created_at,required" json:"created_at,required" query:"created_at,required"`
+	UpdatedAt    string  `thrift:"updated_at,8,required" form:"updated_at,required" json:"updated_at,required" query:"updated_at,required"`
 }
 
 func NewUser() *User {
@@ -231,6 +232,10 @@ func (p *User) GetUserID() (v int64) {
 
 func (p *User) GetUsername() (v string) {
 	return p.Username
+}
+
+func (p *User) GetEmail() (v string) {
+	return p.Email
 }
 
 var User_PasswordHash_DEFAULT string
@@ -261,11 +266,12 @@ func (p *User) GetUpdatedAt() (v string) {
 var fieldIDToName_User = map[int16]string{
 	1: "user_id",
 	2: "username",
-	3: "password_hash",
-	4: "is_admin",
-	5: "score",
-	6: "created_at",
-	7: "updated_at",
+	3: "email",
+	4: "password_hash",
+	5: "is_admin",
+	6: "score",
+	7: "created_at",
+	8: "updated_at",
 }
 
 func (p *User) IsSetPasswordHash() bool {
@@ -278,6 +284,7 @@ func (p *User) Read(iprot thrift.TProtocol) (err error) {
 	var fieldId int16
 	var issetUserID bool = false
 	var issetUsername bool = false
+	var issetEmail bool = false
 	var issetIsAdmin bool = false
 	var issetScore bool = false
 	var issetCreatedAt bool = false
@@ -320,39 +327,48 @@ func (p *User) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField3(iprot); err != nil {
 					goto ReadFieldError
 				}
+				issetEmail = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
 		case 4:
-			if fieldTypeId == thrift.BOOL {
+			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField4(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 5:
+			if fieldTypeId == thrift.BOOL {
+				if err = p.ReadField5(iprot); err != nil {
 					goto ReadFieldError
 				}
 				issetIsAdmin = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
-		case 5:
+		case 6:
 			if fieldTypeId == thrift.I64 {
-				if err = p.ReadField5(iprot); err != nil {
+				if err = p.ReadField6(iprot); err != nil {
 					goto ReadFieldError
 				}
 				issetScore = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
-		case 6:
+		case 7:
 			if fieldTypeId == thrift.STRING {
-				if err = p.ReadField6(iprot); err != nil {
+				if err = p.ReadField7(iprot); err != nil {
 					goto ReadFieldError
 				}
 				issetCreatedAt = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
 			}
-		case 7:
+		case 8:
 			if fieldTypeId == thrift.STRING {
-				if err = p.ReadField7(iprot); err != nil {
+				if err = p.ReadField8(iprot); err != nil {
 					goto ReadFieldError
 				}
 				issetUpdatedAt = true
@@ -382,23 +398,28 @@ func (p *User) Read(iprot thrift.TProtocol) (err error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetIsAdmin {
-		fieldId = 4
+	if !issetEmail {
+		fieldId = 3
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetScore {
+	if !issetIsAdmin {
 		fieldId = 5
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetCreatedAt {
+	if !issetScore {
 		fieldId = 6
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetUpdatedAt {
+	if !issetCreatedAt {
 		fieldId = 7
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetUpdatedAt {
+		fieldId = 8
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -443,6 +464,17 @@ func (p *User) ReadField2(iprot thrift.TProtocol) error {
 }
 func (p *User) ReadField3(iprot thrift.TProtocol) error {
 
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.Email = _field
+	return nil
+}
+func (p *User) ReadField4(iprot thrift.TProtocol) error {
+
 	var _field *string
 	if v, err := iprot.ReadString(); err != nil {
 		return err
@@ -452,7 +484,7 @@ func (p *User) ReadField3(iprot thrift.TProtocol) error {
 	p.PasswordHash = _field
 	return nil
 }
-func (p *User) ReadField4(iprot thrift.TProtocol) error {
+func (p *User) ReadField5(iprot thrift.TProtocol) error {
 
 	var _field bool
 	if v, err := iprot.ReadBool(); err != nil {
@@ -463,7 +495,7 @@ func (p *User) ReadField4(iprot thrift.TProtocol) error {
 	p.IsAdmin = _field
 	return nil
 }
-func (p *User) ReadField5(iprot thrift.TProtocol) error {
+func (p *User) ReadField6(iprot thrift.TProtocol) error {
 
 	var _field int64
 	if v, err := iprot.ReadI64(); err != nil {
@@ -474,7 +506,7 @@ func (p *User) ReadField5(iprot thrift.TProtocol) error {
 	p.Score = _field
 	return nil
 }
-func (p *User) ReadField6(iprot thrift.TProtocol) error {
+func (p *User) ReadField7(iprot thrift.TProtocol) error {
 
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
@@ -485,7 +517,7 @@ func (p *User) ReadField6(iprot thrift.TProtocol) error {
 	p.CreatedAt = _field
 	return nil
 }
-func (p *User) ReadField7(iprot thrift.TProtocol) error {
+func (p *User) ReadField8(iprot thrift.TProtocol) error {
 
 	var _field string
 	if v, err := iprot.ReadString(); err != nil {
@@ -529,6 +561,10 @@ func (p *User) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField7(oprot); err != nil {
 			fieldId = 7
+			goto WriteFieldError
+		}
+		if err = p.writeField8(oprot); err != nil {
+			fieldId = 8
 			goto WriteFieldError
 		}
 	}
@@ -584,8 +620,25 @@ WriteFieldEndError:
 }
 
 func (p *User) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("email", thrift.STRING, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Email); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
+func (p *User) writeField4(oprot thrift.TProtocol) (err error) {
 	if p.IsSetPasswordHash() {
-		if err = oprot.WriteFieldBegin("password_hash", thrift.STRING, 3); err != nil {
+		if err = oprot.WriteFieldBegin("password_hash", thrift.STRING, 4); err != nil {
 			goto WriteFieldBeginError
 		}
 		if err := oprot.WriteString(*p.PasswordHash); err != nil {
@@ -597,33 +650,16 @@ func (p *User) writeField3(oprot thrift.TProtocol) (err error) {
 	}
 	return nil
 WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
-}
-
-func (p *User) writeField4(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("is_admin", thrift.BOOL, 4); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteBool(p.IsAdmin); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
 }
 
 func (p *User) writeField5(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("score", thrift.I64, 5); err != nil {
+	if err = oprot.WriteFieldBegin("is_admin", thrift.BOOL, 5); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.Score); err != nil {
+	if err := oprot.WriteBool(p.IsAdmin); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -637,10 +673,10 @@ WriteFieldEndError:
 }
 
 func (p *User) writeField6(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("created_at", thrift.STRING, 6); err != nil {
+	if err = oprot.WriteFieldBegin("score", thrift.I64, 6); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.CreatedAt); err != nil {
+	if err := oprot.WriteI64(p.Score); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -654,10 +690,10 @@ WriteFieldEndError:
 }
 
 func (p *User) writeField7(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("updated_at", thrift.STRING, 7); err != nil {
+	if err = oprot.WriteFieldBegin("created_at", thrift.STRING, 7); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.UpdatedAt); err != nil {
+	if err := oprot.WriteString(p.CreatedAt); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -668,6 +704,23 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 7 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 7 end error: ", p), err)
+}
+
+func (p *User) writeField8(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("updated_at", thrift.STRING, 8); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.UpdatedAt); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 8 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 8 end error: ", p), err)
 }
 
 func (p *User) String() string {

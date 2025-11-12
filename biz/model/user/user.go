@@ -422,7 +422,8 @@ func (p *LoginResp) String() string {
 // 用户注册
 type RegisterReq struct {
 	Username string `thrift:"username,1,required" form:"username,required" json:"username,required" query:"username,required"`
-	Password string `thrift:"password,2,required" form:"password,required" json:"password,required" query:"password,required"`
+	Email    string `thrift:"email,2,required" form:"email,required" json:"email,required" query:"email,required"`
+	Password string `thrift:"password,3,required" form:"password,required" json:"password,required" query:"password,required"`
 }
 
 func NewRegisterReq() *RegisterReq {
@@ -436,13 +437,18 @@ func (p *RegisterReq) GetUsername() (v string) {
 	return p.Username
 }
 
+func (p *RegisterReq) GetEmail() (v string) {
+	return p.Email
+}
+
 func (p *RegisterReq) GetPassword() (v string) {
 	return p.Password
 }
 
 var fieldIDToName_RegisterReq = map[int16]string{
 	1: "username",
-	2: "password",
+	2: "email",
+	3: "password",
 }
 
 func (p *RegisterReq) Read(iprot thrift.TProtocol) (err error) {
@@ -450,6 +456,7 @@ func (p *RegisterReq) Read(iprot thrift.TProtocol) (err error) {
 	var fieldTypeId thrift.TType
 	var fieldId int16
 	var issetUsername bool = false
+	var issetEmail bool = false
 	var issetPassword bool = false
 
 	if _, err = iprot.ReadStructBegin(); err != nil {
@@ -480,6 +487,15 @@ func (p *RegisterReq) Read(iprot thrift.TProtocol) (err error) {
 				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
+				issetEmail = true
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 3:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
 				issetPassword = true
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
 				goto SkipFieldError
@@ -502,8 +518,13 @@ func (p *RegisterReq) Read(iprot thrift.TProtocol) (err error) {
 		goto RequiredFieldNotSetError
 	}
 
-	if !issetPassword {
+	if !issetEmail {
 		fieldId = 2
+		goto RequiredFieldNotSetError
+	}
+
+	if !issetPassword {
+		fieldId = 3
 		goto RequiredFieldNotSetError
 	}
 	return nil
@@ -543,6 +564,17 @@ func (p *RegisterReq) ReadField2(iprot thrift.TProtocol) error {
 	} else {
 		_field = v
 	}
+	p.Email = _field
+	return nil
+}
+func (p *RegisterReq) ReadField3(iprot thrift.TProtocol) error {
+
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
 	p.Password = _field
 	return nil
 }
@@ -559,6 +591,10 @@ func (p *RegisterReq) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField2(oprot); err != nil {
 			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
 			goto WriteFieldError
 		}
 	}
@@ -597,10 +633,10 @@ WriteFieldEndError:
 }
 
 func (p *RegisterReq) writeField2(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("password", thrift.STRING, 2); err != nil {
+	if err = oprot.WriteFieldBegin("email", thrift.STRING, 2); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteString(p.Password); err != nil {
+	if err := oprot.WriteString(p.Email); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -611,6 +647,23 @@ WriteFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
 WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *RegisterReq) writeField3(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("password", thrift.STRING, 3); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.Password); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
 func (p *RegisterReq) String() string {

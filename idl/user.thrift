@@ -16,6 +16,7 @@ struct LoginResp {
 // 用户注册
 struct RegisterReq {
   required string username;
+  required string email;
   required string password;
 }
 

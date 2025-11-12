@@ -5,6 +5,7 @@ USE carbuyer_assistance;
 CREATE TABLE IF NOT EXISTS users (
                                      user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
                                      username VARCHAR(32) UNIQUE NOT NULL,
+                                     email VARCHAR(128) UNIQUE NOT NULL,
                                      password_hash VARCHAR(255) NOT NULL,
                                      is_admin bool NOT NULL DEFAULT false,
                                      score INT NOT NULL DEFAULT 0,

@@ -9,6 +9,7 @@ import (
 type User struct {
 	UserId       int64
 	Username     string
+	Email        string
 	PasswordHash string
 	IsAdmin      bool
 	Score        int64
@@ -36,13 +37,13 @@ type Feedback struct {
 }
 
 func (f Feedback) ToModuleStruct() *module.Feedback {
-    return &module.Feedback{
-        ID:        f.Id,
-        UserID:    f.UserId,
-        ConsultID: f.ConsultId,
-        Content:   f.Content,
-        CreatedAt: f.CreatedAt.String(),
-    }
+	return &module.Feedback{
+		ID:        f.Id,
+		UserID:    f.UserId,
+		ConsultID: f.ConsultId,
+		Content:   f.Content,
+		CreatedAt: f.CreatedAt.String(),
+	}
 }
 
 type Consult struct {
@@ -86,6 +87,7 @@ func (c Consult) ToModuleStruct() *module.Consult {
 		UpdatedAt:       c.UpdatedAt.Unix(),
 	}
 }
+
 type ScoreTransaction struct {
 	Id           int64
 	UserId       int64
