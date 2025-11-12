@@ -21,7 +21,7 @@ func Register(r *server.Hertz) {
 		_api := root.Group("/api", _apiMw()...)
 		{
 			_consult := _api.Group("/consult", _consultMw()...)
-			_consult.GET("/purchase", append(_purchaseconsultMw(), purchase.PurchaseConsult)...)
+			_consult.POST("/purchase", append(_purchaseconsultMw(), purchase.PurchaseConsult)...)
 			_consult.GET("/query", append(_queryconsultMw(), purchase.QueryConsult)...)
 		}
 	}

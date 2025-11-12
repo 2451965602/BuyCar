@@ -3,59 +3,59 @@
 package purchase
 
 import (
-    "buycar/biz/pack"
-    "buycar/biz/service"
-    "buycar/pkg/errno"
-    "context"
+	"buycar/biz/pack"
+	"buycar/biz/service"
+	"buycar/pkg/errno"
+	"context"
 
-    purchase "buycar/biz/model/purchase"
-    "github.com/cloudwego/hertz/pkg/app"
+	purchase "buycar/biz/model/purchase"
+	"github.com/cloudwego/hertz/pkg/app"
 )
 
 // PurchaseConsult .
-// @router /api/consult/purchase [GET]
+// @router /api/consult/purchase [POST]
 func PurchaseConsult(ctx context.Context, c *app.RequestContext) {
-    var err error
-    var req purchase.PurchaseConsultReq
-    err = c.BindAndValidate(&req)
-    if err != nil {
-        pack.BuildFailResponse(c, err)
-        return
-    }
+	var err error
+	var req purchase.PurchaseConsultReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		pack.BuildFailResponse(c, err)
+		return
+	}
 
-    resp := new(purchase.PurchaseConsultResp)
-    data, err := service.NewConsultService(ctx, c).PurchaseConsult(&req)
-    if err != nil {
-        pack.BuildFailResponse(c, err)
-        return
-    }
+	resp := new(purchase.PurchaseConsultResp)
+	data, err := service.NewConsultService(ctx, c).PurchaseConsult(&req)
+	if err != nil {
+		pack.BuildFailResponse(c, err)
+		return
+	}
 
-    resp.BaseResponse = pack.BuildBaseResp(errno.Success)
-    resp.Consult = data
+	resp.BaseResponse = pack.BuildBaseResp(errno.Success)
+	resp.Consult = data
 
-    pack.SendResponse(c, resp)
+	pack.SendResponse(c, resp)
 }
 
 // QueryConsult .
 // @router /api/consult/query [GET]
 func QueryConsult(ctx context.Context, c *app.RequestContext) {
-    var err error
-    var req purchase.QueryConsultReq
-    err = c.BindAndValidate(&req)
-    if err != nil {
-        pack.BuildFailResponse(c, err)
-        return
-    }
+	var err error
+	var req purchase.QueryConsultReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		pack.BuildFailResponse(c, err)
+		return
+	}
 
-    resp := new(purchase.QueryConsultResp)
-    data, err := service.NewConsultService(ctx, c).QueryConsult(&req)
-    if err != nil {
-        pack.BuildFailResponse(c, err)
-        return
-    }
+	resp := new(purchase.QueryConsultResp)
+	data, err := service.NewConsultService(ctx, c).QueryConsult(&req)
+	if err != nil {
+		pack.BuildFailResponse(c, err)
+		return
+	}
 
-    resp.BaseResponse = pack.BuildBaseResp(errno.Success)
-    resp.Consult = data
+	resp.BaseResponse = pack.BuildBaseResp(errno.Success)
+	resp.Consult = data
 
-    pack.SendResponse(c, resp)
+	pack.SendResponse(c, resp)
 }

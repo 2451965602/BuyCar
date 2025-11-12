@@ -27,6 +27,6 @@ struct QueryConsultResp {
 }
 
 service ConsultService {
-  PurchaseConsultResp purchaseConsult(1: PurchaseConsultReq req) (api.get="/api/consult/purchase"),
+  PurchaseConsultResp purchaseConsult(1: PurchaseConsultReq req) (api.post="/api/consult/purchase"),
   QueryConsultResp queryConsult(1: QueryConsultReq req) (api.get="/api/consult/query")
 }
